@@ -6,6 +6,7 @@ import {
   setPageElementAtom,
   selectedPageElementAtom,
   updateElementAtom,
+  reorderElementsAtom,
 } from "../atoms/elementsAtom";
 import { PageElementInstance } from "../PageElements";
 
@@ -16,6 +17,7 @@ export function usePageElements() {
   const [, setPageElement] = useAtom(setPageElementAtom);
   const [selectedPageElement] = useAtom(selectedPageElementAtom);
   const [, updateElement] = useAtom(updateElementAtom);
+  const [, reorderElements] = useAtom(reorderElementsAtom);
 
   return {
     elements,
@@ -26,5 +28,7 @@ export function usePageElements() {
       setPageElement(element),
     selectedPageElement,
     updateElement: (element: PageElementInstance) => updateElement(element),
+    reorderElements: (activeId: string, overId: string) =>
+      reorderElements({ activeId, overId }),
   };
 }

@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useState } from "react";
 import SideBar from "./SideBar";
 import {
@@ -19,7 +18,8 @@ import { Button } from "./ui/button";
 import { IconTrash } from "@tabler/icons-react";
 
 export default function Dropzone() {
-  const { elements, addElement, setPageElement } = usePageElements();
+  const { elements, addElement, setPageElement, reorderElements } =
+    usePageElements();
   const dropContainer = useDroppable({
     id: "page-drop-area",
     data: {
@@ -33,12 +33,23 @@ export default function Dropzone() {
       if (!active || !over) return;
 
       const isPageBtnElement = active.data?.current?.isDropzoneElement;
+      const isDropzoneComponentElement =
+        active.data?.current?.isDropzoneComponentElement;
+
       if (isPageBtnElement) {
         const type = active.data?.current?.type;
         const newPageElements = PageElements[type as ElementsType].construct(
           Math.floor(Math.random() * 100000).toString()
         );
         addElement(0, newPageElements);
+      } else if (isDropzoneComponentElement) {
+        // Handle reordering
+        const activeId = active.data?.current?.elementId;
+        const overId = over.data?.current?.elementId;
+
+        if (activeId && overId && activeId !== overId) {
+          reorderElements(activeId, overId);
+        }
       }
     },
   });
