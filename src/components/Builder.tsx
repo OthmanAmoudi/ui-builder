@@ -1,6 +1,8 @@
+"use client";
 import React from "react";
 import PreviewArea from "./PreviewArea";
 import { DndContext } from "@dnd-kit/core";
+import DragOverlayWrapper from "./DragOverlayWrapper";
 
 export default function Builder() {
   return (
@@ -10,6 +12,7 @@ export default function Builder() {
         <div className="flex w-full gap-4 h-full bg-accent justify-center relative overflow-y-auto bg-[url(/graph-paper.svg)]">
           <PreviewArea />
         </div>
+        <DragOverlayWrapper />
       </DndContext>
     </div>
   );
