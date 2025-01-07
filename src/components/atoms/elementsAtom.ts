@@ -4,6 +4,14 @@ import { atom } from "jotai";
 
 export const pageElementsAtom = atom<PageElementInstance[]>([]);
 
+export const selectedPageElementAtom = atom<PageElementInstance>();
+export const setPageElementAtom = atom(
+  null,
+  (get, set, element: PageElementInstance) => {
+    set(selectedPageElementAtom, element);
+  }
+);
+
 export const addElementAtom = atom(
   null,
   (
@@ -18,9 +26,8 @@ export const addElementAtom = atom(
   }
 );
 
-export const removeElementAtom = atom(null, (get, set, index: number) => {
+export const removeElementAtom = atom(null, (get, set, id: string) => {
   const prevElements = get(pageElementsAtom);
-  const newElements = [...prevElements];
-  newElements.splice(index, 1);
+  const newElements = prevElements.filter((element) => element.id !== id);
   set(pageElementsAtom, newElements);
 });

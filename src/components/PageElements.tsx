@@ -1,8 +1,22 @@
+// src/components/pageElements.tsx
 import React, { ForwardRefExoticComponent, RefAttributes } from "react";
-import { TextFieldPageElement } from "./elements/TextFieldElement";
+import { TextField } from "./elements/TextField";
 import { Icon, IconProps } from "@tabler/icons-react";
+import { Header } from "./elements/Header";
+import { Footer } from "./elements/Footer";
+import { ImageElement } from "./elements/ImageElement";
+import { Navbar } from "./elements/Navbar";
+import { TextBlock } from "./elements/TextBlock";
+import { Box } from "./elements/Box";
 
-export type ElementsType = "TextField";
+export type ElementsType =
+  | "TextField"
+  | "Header"
+  | "Navbar"
+  | "Footer"
+  | "Box"
+  | "TextBlock"
+  | "ImageElement";
 
 export type PageElement = {
   type: ElementsType;
@@ -14,7 +28,9 @@ export type PageElement = {
     label: string;
   };
 
-  dropzoneComponent: React.FC;
+  dropzoneComponent: React.FC<{
+    elementInstance: PageElementInstance;
+  }>;
   pageComponent: React.FC;
   propertiesComponent: React.FC;
 };
@@ -30,5 +46,11 @@ export type PageElementInstance = {
 };
 
 export const PageElements: PageElementType = {
-  TextField: TextFieldPageElement,
+  TextField: TextField,
+  Header: Header,
+  Navbar: Navbar,
+  Footer: Footer,
+  Box: Box,
+  TextBlock: TextBlock,
+  ImageElement: ImageElement,
 };
