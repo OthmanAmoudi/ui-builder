@@ -8,6 +8,7 @@ import { ImageElement } from "./elements/ImageElement";
 import { Navbar } from "./elements/Navbar";
 import { TextBlock } from "./elements/TextBlock";
 import { Box } from "./elements/Box";
+import { TextWithImage } from "./elements/ImageTextElement";
 
 export type ElementsType =
   | "TextField"
@@ -16,7 +17,8 @@ export type ElementsType =
   | "Footer"
   | "Box"
   | "TextBlock"
-  | "ImageElement";
+  | "ImageElement"
+  | "ImageTextElement";
 
 export type PageElement = {
   type: ElementsType;
@@ -32,7 +34,10 @@ export type PageElement = {
     elementInstance: PageElementInstance;
   }>;
   pageComponent: React.FC;
-  propertiesComponent: React.FC;
+  propertiesComponent: React.FC<{
+    elementInstance: PageElementInstance;
+    updateElement: (instance: PageElementInstance) => void;
+  }>;
 };
 
 type PageElementType = {
@@ -53,4 +58,5 @@ export const PageElements: PageElementType = {
   Box: Box,
   TextBlock: TextBlock,
   ImageElement: ImageElement,
+  ImageTextElement: TextWithImage,
 };

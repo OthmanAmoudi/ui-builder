@@ -19,7 +19,7 @@ import { Button } from "./ui/button";
 import { IconTrash } from "@tabler/icons-react";
 
 export default function Dropzone() {
-  const { elements, addElement, removeElement } = usePageElements();
+  const { elements, addElement, setPageElement } = usePageElements();
   const dropContainer = useDroppable({
     id: "page-drop-area",
     data: {
@@ -44,7 +44,11 @@ export default function Dropzone() {
   });
   return (
     <div className="flex w-full h-full">
-      <div className="p-4 w-full" ref={dropContainer.setNodeRef}>
+      <div
+        className="p-4 w-full"
+        onClick={() => setPageElement(null)}
+        ref={dropContainer.setNodeRef}
+      >
         <div
           className={cn(
             "bg-background p-4 border border-gray-300 h-full m-auto rounded-xl flex flex-grow flex-col justify-start items-center flex-1 overflow-y-auto",
@@ -57,11 +61,7 @@ export default function Dropzone() {
           {elements.length > 0 ? (
             <div className="flex flex-col gap-2 w-full">
               {elements.map((element) => (
-                <PageElementWrapper
-                  key={element.id}
-                  element={element}
-                  removeElementFunc={removeElement}
-                />
+                <PageElementWrapper key={element.id} element={element} />
               ))}
             </div>
           ) : (
@@ -76,13 +76,10 @@ export default function Dropzone() {
   );
 }
 
-function PageElementWrapper({
-  element,
-  removeElementFunc,
-}: {
-  element: PageElementInstance;
-  removeElementFunc: (id: string) => void;
-}) {
+function PageElementWrapper({ element }: { element: PageElementInstance }) {
+  const { removeElement, setPageElement, selectedPageElement } =
+    usePageElements();
+  console.log({ selectedPageElement });
   const [mouseEnter, setMouseEnter] = useState(false);
   const topHalf = useDroppable({
     id: element.id + "-top",
@@ -116,9 +113,19 @@ function PageElementWrapper({
       ref={draggable.setNodeRef}
       {...draggable.listeners}
       {...draggable.attributes}
-      onMouseEnter={() => setMouseEnter(true)}
-      onMouseLeave={() => setMouseEnter(false)}
-      className="relative flex flex-col h-[120px] text-foreground hover:cursor-pointer ring-accent ring-1 ring-inset"
+      onMouseEnter={(e) => {
+        e.stopPropagation();
+        setMouseEnter(true);
+      }}
+      onMouseLeave={(e) => {
+        e.stopPropagation();
+        setMouseEnter(false);
+      }}
+      onClick={(e) => {
+        e.stopPropagation();
+        setPageElement(element);
+      }}
+      className="relative flex flex-col h-[120px] text-foreground hover:cursor-pointer ring-accent ring-1 ring-inset overflow-hidden"
     >
       <div
         ref={topHalf.setNodeRef}
@@ -134,7 +141,10 @@ function PageElementWrapper({
           <div className="absolute right-0 h-full">
             <Button
               variant={"outline"}
-              onClick={() => removeElementFunc(element.id)}
+              onClick={(e) => {
+                e.stopPropagation();
+                removeElement(element.id);
+              }}
               className="flex justify-center h-full border rounded-lg rounded-l-none bg-red-400"
             >
               <IconTrash className="w-8 h-8 text-white" />
@@ -152,13 +162,13 @@ function PageElementWrapper({
       )}
       <div
         className={cn(
-          "flex w-full h-[120px] items-center rounded-md bg-gray-400/20 px-4 py-2 pointer-events-none",
+          "flex w-full h-[120px] items-center rounded-md bg-gray-400/20 px-4 py-2 pointer-events-none opacity-100",
           mouseEnter && "opacity-40",
 
           bottomHalf.isOver && "border-b-4 border-b-blue-500"
         )}
       >
-        <UiComponent elementInstance={element} />;
+        <UiComponent elementInstance={element} />
       </div>
       {bottomHalf.isOver && (
         <div className="absolute bottom-0 w-full rounded-md h-[6px] bg-blue-500 rounded-t-none"></div>

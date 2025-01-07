@@ -9,6 +9,7 @@ import {
   useSensors,
 } from "@dnd-kit/core";
 import DragOverlayWrapper from "./DragOverlayWrapper";
+import { ImportExportActions } from "./ImportExportActions";
 // import dynamic from 'next/dynamic';
 // const DndContext = dynamic(() => import('@dnd-kit/core'), {
 //   ssr: false,
@@ -31,7 +32,10 @@ export default function Builder() {
   const id = useId();
   return (
     <div className="w-full min-h-screen flex flex-col">
-      <h1 className="text-2xl font-bold p-4">Website Builder</h1>
+      <div className="flex justify-between w-full">
+        <h1 className="text-2xl font-bold p-4">Website Builder</h1>
+        <ImportExportActions />
+      </div>
       <DndContext id={id} sensors={sensors}>
         <div className="flex w-full gap-4 h-full bg-accent justify-center relative overflow-y-auto bg-[url(/graph-paper.svg)]">
           <PreviewArea />

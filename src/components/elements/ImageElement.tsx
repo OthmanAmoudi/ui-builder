@@ -10,10 +10,10 @@ import Image from "next/image";
 const type: ElementsType = "ImageElement";
 
 const extraAttributes = {
-  src: "/placeholder.jpg",
+  src: "/placeholder.png",
   alt: "Image description",
-  width: "100%",
-  height: "auto",
+  width: 10,
+  height: 10,
   objectFit: "cover",
 };
 
@@ -38,18 +38,26 @@ function ImageComponent({
 }: {
   elementInstance: PageElementInstance;
 }) {
-  const element = elementInstance as PageElementInstance &
-    typeof extraAttributes;
+  const element = { ...extraAttributes, ...elementInstance.extraAttributes };
+
+  // Fallback to a placeholder image if `src` is an empty string or undefined
+  const src = element.src || "/placeholder.png";
+
   return (
-    <Image
-      src={element.src}
-      alt={element.alt}
-      style={{
-        width: element.width,
-        height: element.height,
-        objectFit: element.objectFit as any,
-      }}
-      className="rounded"
-    />
+    <div className="flex w-full justify-center overflow-hidden">
+      <Image
+        src={src}
+        alt={element.alt}
+        layout="responsive"
+        width={element.width}
+        height={element.height}
+        objectFit={element.objectFit}
+        style={{
+          width: element.width,
+          height: element.height,
+        }}
+        className="w-full h-16 object-cover rounded-lg"
+      />
+    </div>
   );
 }
